@@ -7,15 +7,32 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 
-video = Video.create( name: "Transformers: Age of Extinction (2014)", 
-  description: "An automobile mechanic and his daughter make a discovery that brings down the Autobots - and a paranoid government official - on them.",
-  cover_url: "/tmp/transformer4.jpg",
-  video_url: "/tmp/transformer4_large.jpg"
+video1 = Video.create( name: "Family Guy", 
+  description: "Video about family",
+  cover_url: "/tmp/family_guy.jpg",
+  video_url: "/tmp/monk_large.jpg"
+  )
+video2 = Video.create( name: "Futurama", 
+  description: "Video about futurama",
+  cover_url: "/tmp/futurama.jpg",
+  video_url: "/tmp/monk_large.jpg"
+  )
+video3 = Video.create( name: "Monk", 
+  description: "Video about monk",
+  cover_url: "/tmp/monk.jpg",
+  video_url: "/tmp/monk_large.jpg"
+  )
+video4 = Video.create( name: "South Park", 
+  description: "Video about south park",
+  cover_url: "/tmp/south_park.jpg",
+  video_url: "/tmp/monk_large.jpg"
   )
 
 
-video.categories << Category.create(name: "commedy")
-video.categories << Category.create(name: "drama")
-video.categories << Category.create(name: "reality")
+cate_commedy = Category.create(name: "commedy")
+cate_drama = Category.create(name: "drama")
+cate_reality = Category.create(name: "reality")
 
-
+cate_commedy.videos << video1 << video2
+cate_drama.videos << video1 << video3
+cate_reality.videos << video3 << video4
