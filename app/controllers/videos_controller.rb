@@ -1,6 +1,8 @@
 class VideosController < ApplicationController
+
+  before_action :test_login
+
   def index
-    binding.pry
     @categories = Category.all
   end
 

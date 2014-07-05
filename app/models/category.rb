@@ -4,7 +4,7 @@ class Category < ActiveRecord::Base
 
   validates :name, presence: true
 
-  def recent_videos(limit_num)
+  def recent_videos(limit_num = 6)
     self.videos.order(created_at: :desc).limit(limit_num)
   end
 

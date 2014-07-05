@@ -1,8 +1,5 @@
 class UsersController < ApplicationController
 
-  def front
-  end
-
   def new
     @user = User.new
   end
@@ -13,7 +10,6 @@ class UsersController < ApplicationController
     if @user.save
       session[:user_id] = @user.id
       flash[:success] = "Thank you for your register!"
-      # binding.pry
       redirect_to home_path
     else
       render :new
