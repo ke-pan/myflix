@@ -1,10 +1,15 @@
 class VideosController < ApplicationController
   def index
-    @videos = Video.all
+    binding.pry
+    @categories = Category.all
   end
 
   def show
-    # binding.pry
     @video = Video.find(params[:id])
   end
+
+  def search
+    @videos = Video.search_by_title params[:item]
+  end
+
 end
