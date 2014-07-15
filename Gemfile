@@ -21,11 +21,13 @@ end
 
 group :development, :test do
   gem 'rspec-rails', '2.99'
+  gem 'fabrication'
 end
 
 group :test do
   gem 'database_cleaner', '1.2.0'
   gem 'shoulda-matchers', require: false
+  gem 'faker'
 end
 
 group :production do

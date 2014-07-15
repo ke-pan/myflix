@@ -1,10 +1,11 @@
 class SessionsController < ApplicationController
+
+  before_action :test_logged, only: [:new, :create]
   
   def new
-    redirect_to home_path if logged?
   end
   
-  def create   
+  def create
     user = User.find_by(:email => params[:email])
     if user && user.authenticate(params[:password])
       session[:user_id] = user.id
@@ -12,7 +13,7 @@ class SessionsController < ApplicationController
       redirect_to home_path
     else
       flash[:danger] = "Something wrong about your email or password"
-      redirect_to signin_path
+      render :new
     end
   end
 
@@ -20,6 +21,10 @@ class SessionsController < ApplicationController
     session[:user_id] = nil
     flash[:success] = "You logged out!"
     redirect_to root_path
+  end
+
+  def test_logged
+    redirect_to home_path if logged?
   end
 
 end
