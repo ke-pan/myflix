@@ -28,11 +28,11 @@ describe QueueItemsController do
     end
   end
 
-  describe "DELETE #remove_queue_item" do
+  describe "DELETE #destroy" do
     context "without login" do
       it "redirects to register path" do
         queue_item = Fabricate(:queue_item)
-        delete :remove_queue_item, id: queue_item
+        delete :destroy, id: queue_item
         expect(response).to redirect_to register_path
       end
     end
@@ -44,21 +44,28 @@ describe QueueItemsController do
         @item1 = Fabricate(:queue_item, user: @user, position: 1)
         @item2 = Fabricate(:queue_item, user: @user, position: 2)
       end
-      it "delete one queue_item from database" do
+      it "deletes one queue_item from database" do
         expect {
-          delete :remove_queue_item, id: @item1
+          delete :destroy, id: @item1
         }.to change(QueueItem, :count).by(-1)
       end
 
       it "redirects to my_queue_path" do
-        delete :remove_queue_item, id: @item1
+        delete :destroy, id: @item1
         expect(response).to redirect_to my_queue_path
       end
 
       it "decrement position of remain items" do
-        delete :remove_queue_item, id: @item1
+        delete :destroy, id: @item1
         item2 = QueueItem.first
         expect(item2.position).to eq(1)
+      end
+
+      it "doesn't delete queue_item if it is not in current user's queue" do
+        alice = Fabricate(:user)
+        item3 = Fabricate(:queue_item, user: alice)
+        delete :destroy, id: item3
+        expect(QueueItem.count).to eq(3)
       end
     end
   end

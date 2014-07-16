@@ -14,7 +14,8 @@ Myflix::Application.routes.draw do
   resources :users, only: [:create]
 
   get '/my_queue', to: 'queue_items#index'
-  delete '/remove_queue_items/:id', to: 'queue_items#remove_queue_item', as: 'remove_queue_item'
+  resources :queue_items, only: [:destroy]
+  # delete '/remove_queue_items/:id', to: 'queue_items#remove_queue_item', as: 'remove_queue_item'
   # resources :queue_items, only: [:show, :create]
 
 
