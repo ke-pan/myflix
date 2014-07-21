@@ -22,4 +22,8 @@ class Video < ActiveRecord::Base
     "%.1f" % (sum_rate / self.reviews_count)
   end
 
+  def in_user_queue?(user)
+    queue_items.map(&:user_id).include?(user.id)
+  end
+
 end

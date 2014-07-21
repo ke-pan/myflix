@@ -3,10 +3,7 @@ require "spec_helper"
 describe SessionsController do
   describe "GET #new" do
     context "with logged in" do
-      before do
-        user = Fabricate(:user)
-        session[:user_id] = user.id
-      end
+      before { set_current_user }
       it "redirects to home" do
         get :new
         expect(response).to redirect_to home_path
@@ -22,10 +19,7 @@ describe SessionsController do
 
   describe "POST #create" do
     context "with logged in" do
-      before do
-        user = Fabricate(:user)
-        session[:user_id] = user.id
-      end
+      before { set_current_user }
       it "redirects to home" do
         post :create
         expect(response).to redirect_to home_path
@@ -70,8 +64,7 @@ describe SessionsController do
 
   describe "DELETE #destroy" do
     before do 
-      user = Fabricate(:user)
-      session[:user_id] = user.id
+      set_current_user
       delete :destroy
     end
     it "deletes session" do
