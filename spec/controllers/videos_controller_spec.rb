@@ -4,17 +4,13 @@ describe VideosController do
 
   describe "GET #index" do
     context "without login" do
-      it "should redirect to home path" do
-        get :index
-        expect(response).to redirect_to register_path
+      it_behaves_like "require log in" do
+        let(:action) { get :index }
       end
     end
 
     context "with login" do
-      before do
-        user = Fabricate(:user)
-        session[:user_id] = user.id
-      end
+      before { set_current_user }
       it "populates an array of all categories" do
         drama = Fabricate(:category, name: "drama")
         comedy = Fabricate(:category, name: "comedy")
@@ -28,23 +24,19 @@ describe VideosController do
     end
   end
 
-  
-
   describe "GET #show" do
 
     context "without login" do
-      it "should redirect to home path" do
-        video = Fabricate(:video)
-        get :show, id: video
-        expect(response).to redirect_to register_path
+      it_behaves_like "require log in" do
+        let(:action) do
+          video = Fabricate(:video)
+          get :show, id: video
+        end
       end
     end
 
     context "with login" do
-      before do
-        user = Fabricate(:user)
-        session[:user_id] = user.id
-      end
+      before { set_current_user }
 
       it "assigns the requested video to @video" do
         video = Fabricate(:video)
@@ -63,18 +55,16 @@ describe VideosController do
   describe "Get #search" do
 
     context "without login" do
-      it "should redirect to home path" do
-        video = Fabricate(:video)
-        get :search, item: "h"
-        expect(response).to redirect_to register_path
+      it_behaves_like "require log in" do
+        let(:action) do
+          video = Fabricate(:video)
+          get :search, item: "h"
+        end
       end
     end
 
     context "with login" do
-      before do
-        user = Fabricate(:user)
-        session[:user_id] = user.id
-      end
+      before { set_current_user }
 
       it "assigns the searched videos to @videos" do
         video = Fabricate(:video, name: "hello")
@@ -93,17 +83,15 @@ describe VideosController do
     let(:video) { Fabricate(:video) }
 
     context "without login" do
-      it "should redirect to home path" do
-        post :add_to_queue, id: video
-        expect(response).to redirect_to register_path
+      it_behaves_like "require log in" do
+        let(:action) do
+          post :add_to_queue, id: video
+        end
       end
     end
 
     context "with login" do
-      before do
-        user = Fabricate(:user)
-        session[:user_id] = user.id
-      end
+      before { set_current_user }
       it "add a queue item to database" do
         expect {
           post :add_to_queue, id: video
@@ -112,6 +100,12 @@ describe VideosController do
       it "redirect to my_queue path" do
         post :add_to_queue, id: video
         expect(response).to redirect_to my_queue_path
+      end
+      it "doesn't add a video to queues twice" do
+        queue_item = Fabricate(:queue_item, user: current_user, video: video)
+        expect {
+          post :add_to_queue, id: video
+        }.to change(QueueItem, :count).by(0)
       end
     end
   end

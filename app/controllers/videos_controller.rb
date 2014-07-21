@@ -18,6 +18,7 @@ class VideosController < ApplicationController
   def add_to_queue
     queue_item_order = current_user.queue_items.size + 1
     queue_item = QueueItem.create(user: current_user, video: @video, position: queue_item_order)
+    flash[:danger] = "You can't add a video to queue twice" unless queue_item.valid?
     redirect_to my_queue_path
   end
 

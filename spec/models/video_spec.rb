@@ -55,4 +55,20 @@ describe Video do
     end
   end
 
+  describe "#in_user_queue?(user)" do
+    it "returns true if the video is already in user's queue" do
+      video = Fabricate(:video)
+      user = Fabricate(:user)
+      queue_item = Fabricate(:queue_item, video: video, user: user)
+      expect(video.in_user_queue?(user)).to be_truthy
+    end
+    it "returns false if the video is not in user's queue" do
+      video = Fabricate(:video)
+      user1 = Fabricate(:user)
+      user2 = Fabricate(:user)
+      queue_item = Fabricate(:queue_item, video: video, user: user1)
+      expect(video.in_user_queue?(user2)).to be_falsey
+    end
+  end
+
 end

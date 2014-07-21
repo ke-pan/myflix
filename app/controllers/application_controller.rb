@@ -18,4 +18,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def current_user_has?(something)
+    something.user == current_user
+  end
+
 end

@@ -8,6 +8,6 @@ describe User do
   it { should have_secure_password }
   it { should ensure_length_of(:password).is_at_least(5)}
   it { should have_many(:reviews) }
-  it { should have_many(:queue_items) }
+  it { should have_many(:queue_items).order("position") }
 
 end

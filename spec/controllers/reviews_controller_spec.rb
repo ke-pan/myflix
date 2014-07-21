@@ -4,18 +4,17 @@ describe ReviewsController do
   
   describe "#create" do
     context "without login" do
-      it "should redirect to register path" do
-        video = Fabricate(:video)
-        review = Fabricate.attributes_for(:review)
-        post :create, video_id: video, review: review
+      it_behaves_like "require log in" do
+        let(:action) do
+          video = Fabricate(:video)
+          review = Fabricate.attributes_for(:review)
+          post :create, video_id: video, review: review
+        end
       end
     end
 
     context "with login" do
-      before do
-        user = Fabricate(:user)
-        session[:user_id] = user.id
-      end
+      before { set_current_user }
 
       context "with valid attributes" do
         it "saves a new review to database" do
@@ -32,6 +31,7 @@ describe ReviewsController do
           expect(response).to redirect_to video_path(video)
         end
       end
+
       context "with invalid attributes" do
         it "doesn't save a new review to database" do
           expect {
@@ -48,6 +48,5 @@ describe ReviewsController do
         end
       end
     end
-
   end
 end
