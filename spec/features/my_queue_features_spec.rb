@@ -8,8 +8,8 @@ feature "queue management" do
     monk = Fabricate(:video, name: "Monk", categories: [commedy])
     kongfu = Fabricate(:video, name: "Kong Fu", categories: [commedy])
 
-    # sign_in
-    set_current_user
+    sign_in
+    # set_current_user
 
     find("a[href='/videos/#{transformer.id}']").click
     expect(page).to have_content(transformer.name)
