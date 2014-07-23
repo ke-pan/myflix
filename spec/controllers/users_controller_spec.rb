@@ -41,4 +41,29 @@ describe UsersController do
     end
   end
 
+  describe "GET #show" do
+    context "without log in" do
+      it_behaves_like "require log in" do
+        let(:action) do 
+          get :show, id: 1
+        end
+      end
+    end
+
+    context "with log in" do
+      before do
+        set_current_user
+      end
+      it "renders show template" do
+        get :show, id: current_user
+        expect(response).to render_template :show
+      end
+      it "assigns @user to the specific user" do
+        alice = Fabricate(:user, name: "Alice")
+        get :show, id: alice
+        expect(assigns(:user)).to eq(alice)
+      end
+    end
+  end
+
 end
