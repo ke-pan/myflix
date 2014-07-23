@@ -11,13 +11,14 @@ Myflix::Application.routes.draw do
   resources :categories, only: [:show]
 
   get '/register', to: 'users#new'
-  resources :users, only: [:create]
+  resources :users, only: [:create, :show]
+
+  get '/people', to: 'followships#index'
+  resources :followships, only: [:create, :destroy]
 
   get '/my_queue', to: 'queue_items#index'
   resources :queue_items, only: [:destroy]
   put 'update_queue_items', to: 'queue_items#update'
-  # delete '/remove_queue_items/:id', to: 'queue_items#remove_queue_item', as: 'remove_queue_item'
-  # resources :queue_items, only: [:show, :create]
 
 
   get '/signin',  to: 'sessions#new'

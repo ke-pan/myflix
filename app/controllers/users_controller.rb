@@ -1,5 +1,7 @@
 class UsersController < ApplicationController
 
+  before_action :test_login, only: :show
+
   def new
     @user = User.new
   end
@@ -15,6 +17,11 @@ class UsersController < ApplicationController
       render :new
     end
 
+  end
+
+  def show
+    @user = User.find(params[:id])
+    # binding.pry
   end
 
   def user_params

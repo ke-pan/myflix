@@ -8,13 +8,15 @@ gem 'haml-rails'
 gem 'sass-rails'
 gem 'uglifier'
 gem 'jquery-rails'
+gem 'gravtastic'
+gem "bcrypt"
+
 
 group :development do
   gem 'sqlite3'
   gem 'thin'
   gem "better_errors"
   gem "binding_of_caller"
-  gem "bcrypt"
 end
 
 group :development, :test do

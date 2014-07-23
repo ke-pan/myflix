@@ -4,4 +4,7 @@ class Review < ActiveRecord::Base
 
   validates_presence_of :rate, :description
   validates_inclusion_of :rate, in: 1..5
+
+  delegate :name, to: :video, prefix: "video"
+
 end

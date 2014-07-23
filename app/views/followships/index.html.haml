@@ -1,0 +1,21 @@
+%section.people
+  %header
+    %h2 People I Follow
+  %table.table
+    %thead
+      %tr
+        %th(width="30%")
+        %th(width="20%") Videos in Queue
+        %th(width="20%") Followers
+        %th(width="30%") Unfollow
+    %tbody
+      - @followships.each do |followship|
+        %tr
+          %td
+            = image_tag followship.followee.gravatar_url(size: 40)
+            = link_to followship.followee.name, followship.followee
+          %td.extra-padding=followship.followee.queue_items.count
+          %td.extra-padding=followship.followee.followers.count
+          %td.extra-padding
+            = link_to followship, method: :delete do
+              %i.glyphicon.glyphicon-remove
