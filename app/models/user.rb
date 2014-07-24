@@ -28,4 +28,12 @@ class User < ActiveRecord::Base
     end
   end
 
+  def follows?(another_user)
+    followees.include? another_user
+  end
+
+  def get_followship(another_user)
+    followships.find_by(followee: another_user)
+  end
+
 end

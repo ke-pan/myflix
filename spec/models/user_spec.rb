@@ -15,4 +15,27 @@ describe User do
     with_foreign_key("followee_id") }
   it { should have_many(:followers).through(:followerships).source(:user) }
 
+  describe "#follows?" do
+    it "returns true if user follows another user" do
+      alice = Fabricate(:user)
+      bob = Fabricate(:user)
+      Fabricate(:followship, user: alice, followee: bob)
+      expect(alice.follows?(bob)).to be_truthy
+    end
+    it "returns false if user doesn't follow another user" do
+      alice = Fabricate(:user)
+      bob = Fabricate(:user)
+      expect(alice.follows?(bob)).to be_falsey
+    end
+  end
+
+  describe "#get_followship" do
+    it "returns followship about following another user" do
+      alice = Fabricate(:user)
+      bob = Fabricate(:user)
+      followship = Fabricate(:followship, user: alice, followee: bob)
+      expect(alice.get_followship(bob)).to eq(followship)
+    end
+  end
+
 end
