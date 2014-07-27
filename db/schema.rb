@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140722130155) do
+ActiveRecord::Schema.define(version: 20140726054125) do
 
   create_table "categories", force: true do |t|
     t.string   "name"
@@ -49,6 +49,7 @@ ActiveRecord::Schema.define(version: 20140722130155) do
     t.string   "password_digest"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "reset_password_token"
   end
 
   create_table "video_category_relations", force: true do |t|

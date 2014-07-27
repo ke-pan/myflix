@@ -6,7 +6,6 @@ class User < ActiveRecord::Base
   has_many :followees, through: :followships
   has_many :followerships, class_name: "Followship", foreign_key: "followee_id"
   has_many :followers, through: :followerships, source: :user
-    # class_name: "User", foreign_key: "user_id"
 
   validates_presence_of :name, :email
   validates_uniqueness_of :email
@@ -34,6 +33,10 @@ class User < ActiveRecord::Base
 
   def get_followship(another_user)
     followships.find_by(followee: another_user)
+  end
+
+  def generate_reset_password_token
+    self.reset_password_token = SecureRandom.urlsafe_base64
   end
 
 end

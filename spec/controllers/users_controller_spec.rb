@@ -26,7 +26,19 @@ describe UsersController do
         post :create, user: Fabricate.attributes_for(:user)
         expect(response).to redirect_to home_path
       end
+
+      context "welcome email sending" do
+        it "sends an email to right person" do
+          post :create, user: { email: "test@email.com", password: "secret", name: "Test" }
+          expect(last_email.to).to eq(["test@email.com"])
+        end
+        it "has right content" do
+          post :create, user: { email: "test@email.com", password: "secret", name: "Test James" }
+          expect(last_email.body).to include("Test James")
+        end
+      end
     end
+
     context "with invalid parameters" do
       it "doesn't save anything to database" do
         expect {
@@ -37,6 +49,12 @@ describe UsersController do
       it "renders new template" do
         post :create, user: Fabricate.attributes_for(:user, name: nil)
         expect(response).to render_template :new
+      end
+
+      it "doesn't send the email with invalid inputs" do
+        clear_email
+        post :create, user: Fabricate.attributes_for(:user, name: nil)
+        expect(ActionMailer::Base.deliveries).to be_empty
       end
     end
   end
