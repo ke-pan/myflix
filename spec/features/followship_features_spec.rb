@@ -20,9 +20,9 @@ feature "followship management" do
     expect(page).to have_content(bob.name)
 
     find("a[href='/users/#{bob.id}']").click
-    expect(page).to have_button("Follow")
+    expect(page).to have_link("Follow")
 
-    click_button "Follow"
+    click_link "Follow"
     expect(page).to have_content("You successfully follow #{bob.name}")
 
     click_link "People"

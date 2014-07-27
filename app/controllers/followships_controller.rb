@@ -6,8 +6,8 @@ class FollowshipsController < ApplicationController
   end
 
   def create
-    followee = User.find(params[:user])
-    followship = Followship.create(user: current_user, followee: followee)
+    followee = User.find(params[:followee_id])
+    followship = Followship.create(user: current_user, followee: followee) unless followee == current_user
     if followship.save
       flash[:success] = "You successfully follow #{followee.name}."
     else

@@ -1,5 +1,6 @@
 Myflix::Application.routes.draw do
   root to: "pages#front"
+
   get '/home', to: 'videos#index'
   get '/ui(/:action)', controller: 'ui'
 
@@ -12,6 +13,13 @@ Myflix::Application.routes.draw do
 
   get '/register', to: 'users#new'
   resources :users, only: [:create, :show]
+
+  get 'forget_password', to: 'reset_password#forget_password'
+  post 'send_reset_password_email', to: 'reset_password#send_reset_password_email'
+  get 'invalid_token', to: 'reset_password#invalid_token'
+  get 'new_password/:token', to: 'reset_password#new_password', as: :new_password
+  post 'update_password', to: 'reset_password#update_password'
+
 
   get '/people', to: 'followships#index'
   resources :followships, only: [:create, :destroy]

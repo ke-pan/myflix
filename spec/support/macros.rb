@@ -18,3 +18,11 @@ def sign_in(iuser=nil)
   fill_in 'Password', with: user.password
   click_button 'Sign In'
 end
+
+def last_email
+  ActionMailer::Base.deliveries.last
+end
+
+def clear_email
+  ActionMailer::Base.deliveries.clear
+end

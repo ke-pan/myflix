@@ -35,16 +35,16 @@ describe FollowshipsController do
         set_current_user(@alice)
       end
       it "redirects to user path if valid input" do
-        post :create, user: @bob.id
+        post :create, followee_id: @bob.id
         expect(response).to redirect_to user_path(@bob)
       end
       it "follows the user" do
-        post :create, user: @bob.id
+        post :create, followee_id: @bob.id
         expect(current_user.followees).to match_array([@bob])
       end
       it "doesn't follow a person twice" do
         followship = Fabricate(:followship, user: @alice, followee: @bob)
-        post :create, user: @bob.id
+        post :create, followee_id: @bob.id
         expect(Followship.count).to eq(1)
       end
     end

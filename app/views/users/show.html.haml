@@ -5,9 +5,11 @@
         %header
           =image_tag @user.gravatar_url(size: 40)
           %h2="#{@user.name}'s video collections (#{@user.queue_items.size})"
-          =form_tag followships_path do
-            =hidden_field_tag "user", @user.id
-            =submit_tag "Follow", class: "btn btn-default"
+          - if @user == current_user
+          - elsif current_user.follows?(@user)
+            =link_to "Unfollow", followship_path(current_user.get_followship(@user)), class: "btn btn-default", method: :delete
+          - else
+            =link_to "Follow", followships_path(followee_id: @user.id), class: "btn btn-default", method: :post
         %table.table
           %thead
             %tr

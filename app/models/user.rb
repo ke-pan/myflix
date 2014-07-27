@@ -6,7 +6,6 @@ class User < ActiveRecord::Base
   has_many :followees, through: :followships
   has_many :followerships, class_name: "Followship", foreign_key: "followee_id"
   has_many :followers, through: :followerships, source: :user
-    # class_name: "User", foreign_key: "user_id"
 
   validates_presence_of :name, :email
   validates_uniqueness_of :email
@@ -26,6 +25,18 @@ class User < ActiveRecord::Base
     queue_items.each_with_index do |item, index|
       item.update_attribute(:position, (index + 1))
     end
+  end
+
+  def follows?(another_user)
+    followees.include? another_user
+  end
+
+  def get_followship(another_user)
+    followships.find_by(followee: another_user)
+  end
+
+  def generate_reset_password_token
+    self.reset_password_token = SecureRandom.urlsafe_base64
   end
 
 end

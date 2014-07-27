@@ -10,6 +10,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
+      AppMailer.welcome_mail(@user).deliver
       session[:user_id] = @user.id
       flash[:success] = "Thank you for your register!"
       redirect_to home_path
@@ -21,7 +22,6 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-    # binding.pry
   end
 
   def user_params
