@@ -3,7 +3,6 @@ class AppMailer < ActionMailer::Base
 
   def welcome_mail(user)
     @user = user
-    @url = '/signin'
     mail(
       to: @user.email,
       subject: "Welcome to register!"

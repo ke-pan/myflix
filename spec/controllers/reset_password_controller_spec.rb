@@ -75,9 +75,11 @@ describe ResetPasswordController do
     end
 
     context 'with valid token and password' do
-      before do
-        @alice = Fabricate(:user, email: "alice@test.com", 
+      let!(:alice) do
+        Fabricate(:user, email: "alice@test.com", 
           reset_password_token: 'fake token', password: "secret")
+      end
+      before do
         get :update_password, token: 'fake token', password: '123456'
       end
       it "redirects to signin path" do
@@ -87,7 +89,7 @@ describe ResetPasswordController do
         expect(flash[:success]).to eq "Your password has reset successfully!"
       end
       it "change user's password" do
-        expect(@alice.reload.authenticate('123456')).to be_truthy
+        expect(alice.reload.authenticate('123456')).to be_truthy
       end
     end
   end

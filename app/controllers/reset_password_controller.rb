@@ -1,8 +1,5 @@
 class ResetPasswordController < ApplicationController
 
-  def forget_password
-  end
-
   def send_reset_password_email
     user = User.find_by_email(params[:email])
     if user
@@ -29,8 +26,7 @@ class ResetPasswordController < ApplicationController
     @user= User.find_by(:reset_password_token => params[:token])
     unless @user
       flash[:danger] = "can't find the user in the system."
-      redirect_to home_path
-      return
+      redirect_to home_path and return
     end
     @user.password = params[:password]
     if @user.save
@@ -39,9 +35,6 @@ class ResetPasswordController < ApplicationController
     else
       render :new_password
     end
-  end
-
-  def invalid_token
   end
 
 end
