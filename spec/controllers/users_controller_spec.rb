@@ -3,14 +3,23 @@ require 'spec_helper'
 describe UsersController do
   
   describe "Get #new" do
-    before { get :new }
-
-    it "assigns a new User to @user" do
+    it "assigns a new User to @user without token" do
+      get :new
       expect(assigns(:user)).to be_a_new(User)
     end
-    it "renders the :new template" do
-      expect(response).to render_template :new
+
+    it "assigns @user with specific name and email if request with valid token" do
+      invitation = Fabricate(:invitation)
+      get :new, token: invitation.token
+      expect(assigns(:user).email).to eq invitation.email
+      expect(assigns(:user).name).to eq invitation.name
     end
+
+    it "assigns a new User to @user with invalid token" do
+      get :new, token: "123456"
+      expect(assigns(:user)).to be_a_new(User)
+    end
+
   end
 
   describe "Post #create" do
@@ -36,6 +45,29 @@ describe UsersController do
           post :create, user: { email: "test@email.com", password: "secret", name: "Test James" }
           expect(last_email.body).to include("Test James")
         end
+      end
+
+      it "sets followships between inviter and invitee with valid token" do
+        inviter = Fabricate(:user)
+        invitation = Fabricate(:invitation, user: inviter)
+        post :create, user: { email: "test@email.com", password: "secret", name: "Test James" },
+                      token: invitation.token
+        invitee = User.find_by_email("test@email.com")
+        expect(inviter.follows?(invitee)).to be_truthy
+        expect(invitee.follows?(inviter)).to be_truthy
+      end
+      it 'delete invitation with valid token' do
+        inviter = Fabricate(:user)
+        invitation = Fabricate(:invitation, user: inviter)
+        post :create, user: { email: "test@email.com", password: "secret", name: "Test James" },
+                      token: invitation.token
+        expect(Invitation.count).to be_zero
+      end
+      it "doesn't set followships between inviter and invitee with invalid token" do
+        post :create, user: { email: "test@email.com", password: "secret", name: "Test James" },
+                      token: "123456"
+        invitee = User.find_by_email("test@email.com")
+        expect(Followship.count).to be_zero
       end
     end
 

@@ -7,6 +7,8 @@
         - unless @user.errors.empty?
           .alert.alert-danger Please check the input errors
         %fieldset
+          - if @invitation
+            = hidden_field_tag :token, @invitation.token
           .form-group
             = f.label :email, "Email Address", class: "control-label col-sm-2"
             .col-sm-6

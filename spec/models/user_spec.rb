@@ -14,6 +14,7 @@ describe User do
   it { should have_many(:followerships).class_name("Followship").
     with_foreign_key("followee_id") }
   it { should have_many(:followers).through(:followerships).source(:user) }
+  it { should have_many(:invitations) }
 
   describe "#follows?" do
     it "returns true if user follows another user" do
