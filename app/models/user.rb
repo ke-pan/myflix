@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
   has_many :followees, through: :followships
   has_many :followerships, class_name: "Followship", foreign_key: "followee_id"
   has_many :followers, through: :followerships, source: :user
+  has_many :invitations
 
   validates_presence_of :name, :email
   validates_uniqueness_of :email

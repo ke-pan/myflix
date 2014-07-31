@@ -1,0 +1,11 @@
+!!! 5
+%html(lang="en-US")
+  %body
+    %p Dear #{@name}
+    %p Your friend #{@user.name} invite you to join myflix
+    %p click this button to join us
+    %p
+      =link_to "Join MyFlix", register_url(token: @token), class: "btn btn-primary"
+
+    %p Here is message from #{@user.name}
+    %p #{@message}
