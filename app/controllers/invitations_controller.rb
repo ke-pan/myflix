@@ -12,7 +12,7 @@ class InvitationsController < ApplicationController
     end
     @invitation = current_user.invitations.build(invitation_params)
     if @invitation.save
-      AppMailer.invitation_mail(current_user, @invitation).deliver
+      InvitationWorker.perform_async(current_user.id, @invitation.id)
       redirect_to invitation_confirm_path
     else
       render :new
