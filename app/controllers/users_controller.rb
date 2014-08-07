@@ -19,7 +19,7 @@ class UsersController < ApplicationController
         Followship.create(user_id: @user.id, followee_id: inviter.id)
         @invitation.destroy
       end
-      AppMailer.welcome_mail(@user).deliver
+      WelcomeWorker.perform_async(@user.id)
       session[:user_id] = @user.id
       flash[:success] = "Thank you for your register!"
       redirect_to home_path

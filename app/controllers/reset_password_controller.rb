@@ -5,7 +5,7 @@ class ResetPasswordController < ApplicationController
     if user
       user.generate_reset_password_token
       user.save
-      AppMailer.reset_password_mail(user).deliver
+      PasswordResetWorker.perform_async(user.id)
     else
       flash[:danger] = "There is some problems about your email."
       redirect_to forget_password_path
