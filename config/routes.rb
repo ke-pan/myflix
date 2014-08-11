@@ -9,6 +9,9 @@ Myflix::Application.routes.draw do
     post 'add_to_queue', on: :member
     resources :reviews, only: [:create]
   end
+  namespace :admin do
+    resources :videos, only: [:new, :create]
+  end
   resources :categories, only: [:show]
 
   get '/register/(:token)', to: 'users#new', as: "register"

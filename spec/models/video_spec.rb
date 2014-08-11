@@ -4,8 +4,6 @@ describe Video do
 
   it { should validate_presence_of(:name) }
   it { should validate_presence_of(:description) }
-  it { should validate_presence_of(:cover_url) }
-  it { should validate_presence_of(:video_url) }
 
   it { should have_many(:categories) }
   it { should have_many(:reviews) }

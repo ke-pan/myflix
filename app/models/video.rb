@@ -4,10 +4,13 @@ class Video < ActiveRecord::Base
   has_many :reviews
   has_many :queue_items
 
-  validates_presence_of :name, :description, :cover_url, :video_url
+  validates_presence_of :name, :description
 
   delegate :count, to: :reviews, prefix: "reviews"
-  
+
+  mount_uploader :small_cover, VideoSmallCoverUploader
+  mount_uploader :large_cover, VideoLargeCoverUploader
+
   def self.search_by_title(title)
     Video.where("name LIKE ?", "%#{title}%")
   end

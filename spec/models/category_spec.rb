@@ -9,10 +9,10 @@ describe Category do
     before do
       @videos_array = 11.times.map do |i|
         Video.create(
-          name: "my video#{i}", 
-          description: "incredible!", 
-          cover_url: "some/url/of/cover#{i}", 
-          video_url: "some/url/of/video#{i}" 
+          name: "my video#{i}",
+          description: "incredible!",
+          small_cover: "some/url/of/cover#{i}",
+          large_cover: "some/url/of/video#{i}" 
         )
       end
       @category1 = Category.create(name: "my category1")

@@ -10,6 +10,11 @@ gem 'uglifier'
 gem 'jquery-rails'
 gem 'gravtastic'
 gem "bcrypt"
+gem 'sidekiq'
+gem 'carrierwave'
+gem 'mini_magick'
+gem 'fog', '~> 1.3.1'
+gem 'nokogiri', '~> 1.5.0'
 
 
 group :development do
@@ -18,14 +23,13 @@ group :development do
   gem "better_errors"
   gem "binding_of_caller"
   gem 'letter_opener'
-  gem 'sidekiq'
 end
 
 group :development, :test do
   gem 'rspec-rails', '2.99'
   gem 'fabrication'
   gem 'pry'
-  gem 'pry-nav'  
+  gem 'pry-nav'
 end
 
 group :test do
@@ -42,4 +46,3 @@ group :production do
   gem 'pg'
   gem 'rails_12factor'
 end
-
