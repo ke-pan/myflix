@@ -15,6 +15,8 @@ gem 'carrierwave'
 gem 'mini_magick'
 gem 'fog', '~> 1.3.1'
 gem 'nokogiri', '~> 1.5.0'
+gem 'stripe'
+gem 'figaro', git: "https://github.com/laserlemon/figaro"
 
 
 group :development do
