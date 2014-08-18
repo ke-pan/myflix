@@ -15,19 +15,19 @@ describe StripeWrapper::Charge do
 
   context "with valid card" do
     let(:card_token) { 4242424242424242 }
-    it "doesn't raise Stripe::CardError" do
+    it "doesn't raise Stripe::CardError", :vcr do
       expect {
         StripeWrapper::Charge.charge(
           :token  => token,
           :amount => 999
         )
-      }.not_to raise_error
+      }.to_not raise_error
     end
   end
 
   context "with invalid card" do
     let(:card_token) { 4000000000000020 }
-    it "raises Stripe::CardError" do
+    it "raises Stripe::CardError", :vcr do
       expect {
         StripeWrapper::Charge.charge(
           :token  => token,

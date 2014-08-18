@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe UsersController do
-  
+
   describe "Get #new" do
     it "assigns a new User to @user without token" do
       get :new
@@ -24,49 +24,60 @@ describe UsersController do
 
   describe "Post #create" do
 
+    let(:token) do
+      Stripe::Token.create(
+        :card => {
+          :number => 4242424242424242,
+          :exp_month => 8,
+          :exp_year => 2015,
+          :cvc => "314"
+        }
+      ).id
+    end
+
     context "with valid parameters" do
-      it "saves a new User to database" do
-        expect { 
-          post :create, 
-          user: Fabricate.attributes_for(:user) 
+      it "saves a new User to database", :vcr do
+        expect {
+          post :create,
+          user: Fabricate.attributes_for(:user),
+          stripeToken: token
         }.to change(User, :count).by(1)
       end
-      it "redirect to home path" do
-        post :create, user: Fabricate.attributes_for(:user)
+      it "redirect to home path", :vcr do
+        post :create, user: Fabricate.attributes_for(:user), stripeToken: token
         expect(response).to redirect_to home_path
       end
 
       context "welcome email sending" do
-        it "sends an email to right person" do
-          post :create, user: { email: "test@email.com", password: "secret", name: "Test" }
+        it "sends an email to right person", :vcr do
+          post :create, user: { email: "test@email.com", password: "secret", name: "Test" }, stripeToken: token
           expect(last_email.to).to eq(["test@email.com"])
         end
-        it "has right content" do
-          post :create, user: { email: "test@email.com", password: "secret", name: "Test James" }
+        it "has right content", :vcr do
+          post :create, user: { email: "test@email.com", password: "secret", name: "Test James" }, stripeToken: token
           expect(last_email.body).to include("Test James")
         end
       end
 
-      it "sets followships between inviter and invitee with valid token" do
+      it "sets followships between inviter and invitee with valid token", :vcr do
         inviter = Fabricate(:user)
         invitation = Fabricate(:invitation, user: inviter)
         post :create, user: { email: "test@email.com", password: "secret", name: "Test James" },
-                      token: invitation.token
+                      token: invitation.token, stripeToken: token
         invitee = User.find_by_email("test@email.com")
         expect(inviter.follows?(invitee)).to be_truthy
         expect(invitee.follows?(inviter)).to be_truthy
       end
-      it 'delete invitation with valid token' do
+      it 'delete invitation with valid token', :vcr do
         inviter = Fabricate(:user)
         invitation = Fabricate(:invitation, user: inviter)
         post :create, user: { email: "test@email.com", password: "secret", name: "Test James" },
-                      token: invitation.token
+                      token: invitation.token, stripeToken: token
         expect(Invitation.count).to be_zero
       end
-      it "doesn't set followships between inviter and invitee with invalid token" do
+      it "doesn't set followships between inviter and invitee with invalid token", :vcr do
         post :create, user: { email: "test@email.com", password: "secret", name: "Test James" },
-                      token: "123456"
-        invitee = User.find_by_email("test@email.com")
+                      token: "123456", stripeToken: token
         expect(Followship.count).to be_zero
       end
     end
@@ -77,10 +88,6 @@ describe UsersController do
           post :create,
           user: Fabricate.attributes_for(:user, name: nil)
         }.to_not change(User, :count)
-      end
-      it "renders new template" do
-        post :create, user: Fabricate.attributes_for(:user, name: nil)
-        expect(response).to render_template :new
       end
 
       it "doesn't send the email with invalid inputs" do
@@ -94,7 +101,7 @@ describe UsersController do
   describe "GET #show" do
     context "without log in" do
       it_behaves_like "require log in" do
-        let(:action) do 
+        let(:action) do
           get :show, id: 1
         end
       end
