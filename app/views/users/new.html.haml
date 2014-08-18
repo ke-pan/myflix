@@ -1,7 +1,7 @@
 =content_for :head do
   %script(type="text/javascript" src="https://js.stripe.com/v2/")
   :javascript
-    Stripe.setPublishableKey(ENV["stripe_publishable_key"]);
+    Stripe.setPublishableKey("#{ENV['stripe_publishable_key']}");
 %section.register.container
   .row
     .col-sm-10.col-sm-offset-1

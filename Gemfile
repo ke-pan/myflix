@@ -17,6 +17,7 @@ gem 'fog', '~> 1.3.1'
 gem 'nokogiri', '~> 1.5.0'
 gem 'stripe'
 gem 'figaro', git: "https://github.com/laserlemon/figaro"
+# gem 'excon', '~> 0.27.5'
 
 
 group :development do
@@ -42,6 +43,8 @@ group :test do
   gem 'launchy'
   gem 'email_spec'
   gem 'capybara-email'
+  gem 'vcr'
+  gem 'webmock'
 end
 
 group :production do

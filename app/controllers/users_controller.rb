@@ -14,28 +14,23 @@ class UsersController < ApplicationController
     begin
       User.transaction do
         @user = User.create!(user_params)
-        customer = Stripe::Customer.create(
-          :email => @user.email,
-          :card  => params[:stripeToken]
-        )
-
-        Stripe::Charge.create(
-          :customer    => customer.id,
-          :amount      => 999,
+        StripeWrapper::Charge.charge(
+          :email       => @user.email,
+          :token       => params[:stripeToken],
           :description => "charge of signup #{@user.email}",
-          :currency    => 'usd'
+          :amount      => 999
         )
-        if valid_token?
-          inviter = @invitation.user
-          Followship.create(user_id: inviter.id, followee_id: @user.id)
-          Followship.create(user_id: @user.id, followee_id: inviter.id)
-          @invitation.destroy
-        end
-        WelcomeWorker.perform_async(@user.id)
-        session[:user_id] = @user.id
-        flash[:success] = "Thank you for your register!"
-        redirect_to home_path
       end
+      if valid_token?
+        inviter = @invitation.user
+        Followship.create(user_id: inviter.id, followee_id: @user.id)
+        Followship.create(user_id: @user.id, followee_id: inviter.id)
+        @invitation.destroy
+      end
+      WelcomeWorker.perform_async(@user.id)
+      session[:user_id] = @user.id
+      flash[:success] = "Thank you for your register!"
+      redirect_to home_path
     rescue Stripe::CardError, ActiveRecord::RecordInvalid => e
       flash[:danger] = e.message
       redirect_to register_path
