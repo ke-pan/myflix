@@ -24,60 +24,52 @@ describe UsersController do
 
   describe "Post #create" do
 
-    let(:token) do
-      Stripe::Token.create(
-        :card => {
-          :number => 4242424242424242,
-          :exp_month => 8,
-          :exp_year => 2015,
-          :cvc => "314"
-        }
-      ).id
-    end
+    context "with valid parameters and valid card info" do
 
-    context "with valid parameters" do
-      it "saves a new User to database", :vcr do
+      before { expect(StripeWrapper::Charge).to receive(:charge) }
+
+      it "saves a new User to database" do
         expect {
           post :create,
           user: Fabricate.attributes_for(:user),
-          stripeToken: token
+          stripeToken: 1234
         }.to change(User, :count).by(1)
       end
-      it "redirect to home path", :vcr do
-        post :create, user: Fabricate.attributes_for(:user), stripeToken: token
+      it "redirect to home path" do
+        post :create, user: Fabricate.attributes_for(:user), stripeToken: 1234
         expect(response).to redirect_to home_path
       end
 
       context "welcome email sending" do
-        it "sends an email to right person", :vcr do
-          post :create, user: { email: "test@email.com", password: "secret", name: "Test" }, stripeToken: token
+        it "sends an email to right person" do
+          post :create, user: { email: "test@email.com", password: "secret", name: "Test" }, stripeToken: 1234
           expect(last_email.to).to eq(["test@email.com"])
         end
-        it "has right content", :vcr do
-          post :create, user: { email: "test@email.com", password: "secret", name: "Test James" }, stripeToken: token
+        it "has right content" do
+          post :create, user: { email: "test@email.com", password: "secret", name: "Test James" }, stripeToken: 1234
           expect(last_email.body).to include("Test James")
         end
       end
 
-      it "sets followships between inviter and invitee with valid token", :vcr do
+      it "sets followships between inviter and invitee with valid token" do
         inviter = Fabricate(:user)
         invitation = Fabricate(:invitation, user: inviter)
         post :create, user: { email: "test@email.com", password: "secret", name: "Test James" },
-                      token: invitation.token, stripeToken: token
+                      token: invitation.token, stripeToken: 1234
         invitee = User.find_by_email("test@email.com")
         expect(inviter.follows?(invitee)).to be_truthy
         expect(invitee.follows?(inviter)).to be_truthy
       end
-      it 'delete invitation with valid token', :vcr do
+      it 'delete invitation with valid token' do
         inviter = Fabricate(:user)
         invitation = Fabricate(:invitation, user: inviter)
         post :create, user: { email: "test@email.com", password: "secret", name: "Test James" },
-                      token: invitation.token, stripeToken: token
+                      token: invitation.token, stripeToken: 1234
         expect(Invitation.count).to be_zero
       end
-      it "doesn't set followships between inviter and invitee with invalid token", :vcr do
+      it "doesn't set followships between inviter and invitee with invalid token" do
         post :create, user: { email: "test@email.com", password: "secret", name: "Test James" },
-                      token: "123456", stripeToken: token
+                      token: "123456", stripeToken: 1234
         expect(Followship.count).to be_zero
       end
     end
@@ -94,6 +86,33 @@ describe UsersController do
         clear_email
         post :create, user: Fabricate.attributes_for(:user, name: nil)
         expect(ActionMailer::Base.deliveries).to be_empty
+      end
+
+      it "doesn't charge any payment" do
+        post :create, user: Fabricate.attributes_for(:user, name: nil)
+        expect(StripeWrapper::Charge).not_to receive(:charge)
+      end
+
+      it "redirects to register path" do
+        post :create, user: Fabricate.attributes_for(:user, name: nil)
+        expect(response).to redirect_to register_path
+      end
+    end
+
+    context "with valid personal info and invalid card info" do
+      before do
+        card_error = Stripe::CardError.new("Your card was declined.", nil, nil)
+        StripeWrapper::Charge.should_receive(:charge).and_raise(card_error)
+        post :create, user: Fabricate.attributes_for(:user), stripeToken: 1234
+      end
+      it "doesn't create any user" do
+        expect(User.count).to eq 0
+      end
+      it "redirects to register path" do
+        expect(response).to redirect_to register_path
+      end
+      it "shows error flash" do
+        expect(flash[:danger]).to eq "Your card was declined."
       end
     end
   end
