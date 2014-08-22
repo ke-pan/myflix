@@ -25,19 +25,19 @@
               = f.text_field :name, class: "form-control"
         %fieldset.credit_card
           .form-group
-            %label.control-label.col-sm-2 Credit Card Number
+            %label.control-label.col-sm-2(for="credit-card-number") Credit Card Number
             .col-sm-6
-              %input.form-control.card-number(type="text")
+              %input.form-control.card-number#credit-card-number(type="text")
           .form-group
-            %label.control-label.col-sm-2 Security Code
+            %label.control-label.col-sm-2(for="security-code") Security Code
             .col-sm-6
-              %input.form-control.card-cvc(type="text")
+              %input.form-control.card-cvc#security-code(type="text")
           .form-group
             %label.control-label.col-sm-2 Expiration
             .col-sm-3
-              = select_month(Date.today, {add_month_numbers: true},  class: 'form-control card-expiry-month')
+              = select_month(Date.today, {add_month_numbers: true},  id: 'date-month', class: 'form-control card-expiry-month')
             .col-sm-2
-              = select_year(Date.today.year, {start_year: Date.today.year, end_year: Date.today.year + 8}, class: 'form-control card-expiry-year')
+              = select_year(Date.today.year, {start_year: Date.today.year, end_year: Date.today.year + 8}, id: 'date-year', class: 'form-control card-expiry-year')
         %fieldset.actions.control-group.col-sm-offset-2
           .controls
             =f.submit "Sign Up", class: "btn btn-default"

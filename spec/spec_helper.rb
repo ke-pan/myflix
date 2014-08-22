@@ -11,6 +11,7 @@ require 'capybara/email/rspec'
 require 'sidekiq/testing'
 Sidekiq::Testing.inline!
 require 'vcr'
+require 'database_cleaner'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -27,6 +28,7 @@ ActiveRecord::Migration.maintain_test_schema!
 
 VCR.configure do |c|
   c.cassette_library_dir = 'spec/cassettes'
+  c.ignore_localhost = true
   c.hook_into :webmock
   c.configure_rspec_metadata!
 end
@@ -75,5 +77,16 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
 
   config.treat_symbols_as_metadata_keys_with_true_values = true
+
+  config.before(:suite) do
+    DatabaseCleaner.strategy = :transaction
+    DatabaseCleaner.clean_with(:truncation)
+  end
+
+  config.around(:each) do |example|
+    DatabaseCleaner.cleaning do
+      example.run
+    end
+  end
 
 end
