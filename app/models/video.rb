@@ -19,11 +19,11 @@ class Video < ActiveRecord::Base
     self.reviews.order(:updated_at => :desc).limit(limit_num)
   end
 
-  def rate
-    return 0.0 if self.reviews.count == 0
-    sum_rate = self.reviews.reduce(0.0) { |sum, review| sum + review.rate }
-    "%.1f" % (sum_rate / self.reviews_count)
-  end
+  # def rate
+  #   return 0.0 if self.reviews.count == 0
+  #   sum_rate = self.reviews.reduce(0.0) { |sum, review| sum + review.rate }
+  #   "%.1f" % (sum_rate / self.reviews_count)
+  # end
 
   def in_user_queue?(user)
     queue_items.map(&:user_id).include?(user.id)
