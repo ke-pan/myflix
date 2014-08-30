@@ -11,11 +11,15 @@ Myflix::Application.routes.draw do
   end
   namespace :admin do
     resources :videos, only: [:new, :create]
+    resources :payments, only: [:index]
   end
   resources :categories, only: [:show]
 
   get '/register/(:token)', to: 'users#new', as: "register"
-  resources :users, only: [:create, :show]
+  resources :users, only: [:create, :show] do
+    get 'plan_and_billing', to: 'billings#index'
+  end
+  mount StripeEvent::Engine => '/stripe-webhooks'
 
   get 'forget_password', to: 'reset_password#forget_password'
   post 'send_reset_password_email', to: 'reset_password#send_reset_password_email'

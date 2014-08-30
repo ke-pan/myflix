@@ -11,7 +11,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140811122332) do
+ActiveRecord::Schema.define(version: 20140830014545) do
+
+  create_table "billings", force: true do |t|
+    t.datetime "pay_date"
+    t.integer  "user_id"
+    t.datetime "active_until"
+    t.float    "amount"
+  end
+
+  add_index "billings", ["user_id"], name: "index_billings_on_user_id"
 
   create_table "categories", force: true do |t|
     t.string   "name"
@@ -59,6 +68,9 @@ ActiveRecord::Schema.define(version: 20140811122332) do
     t.datetime "updated_at"
     t.string   "reset_password_token"
     t.boolean  "admin"
+    t.datetime "active_until"
+    t.string   "stripe_user_id"
+    t.boolean  "active"
   end
 
   create_table "video_category_relations", force: true do |t|

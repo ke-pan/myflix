@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
   has_many :followerships, class_name: "Followship", foreign_key: "followee_id"
   has_many :followers, through: :followerships, source: :user
   has_many :invitations
+  has_many :billings, dependent: :destroy
 
   validates_presence_of :name, :email
   validates_uniqueness_of :email
@@ -17,10 +18,10 @@ class User < ActiveRecord::Base
 
   include Gravtastic
   gravtastic
-  
+
   def validate_password?
-    password.present? 
-  end 
+    password.present?
+  end
 
   def normalize_queue_items_positions
     queue_items.each_with_index do |item, index|

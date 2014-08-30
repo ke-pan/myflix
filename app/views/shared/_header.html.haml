@@ -19,6 +19,6 @@
           %ul.dropdown-menu(role="menu" aria-labelledby="dlabel")
             %li
               =link_to "Account", current_user
-              %a(href="#") Plan and Billing
+              =link_to "Plan and Billing", user_plan_and_billing_path(current_user)
               =link_to "Invite a Friend", invite_path
-              = link_to "Sign Out", signout_path
+              =link_to "Sign Out", signout_path

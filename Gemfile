@@ -18,6 +18,7 @@ gem 'nokogiri'
 gem 'stripe'
 gem 'figaro', git: "https://github.com/laserlemon/figaro"
 gem 'draper'
+gem 'stripe_event'
 
 
 group :development do
@@ -26,6 +27,7 @@ group :development do
   gem "better_errors"
   gem "binding_of_caller"
   gem 'letter_opener'
+  gem 'ultrahook'
 end
 
 group :development, :test do

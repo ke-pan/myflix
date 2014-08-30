@@ -1,16 +1,21 @@
 class SessionsController < ApplicationController
 
   before_action :test_logged, only: [:new, :create]
-  
+
   def new
   end
-  
+
   def create
     user = User.find_by(:email => params[:email])
     if user && user.authenticate(params[:password])
-      session[:user_id] = user.id
-      flash[:success] = "Welcome back, #{user.name}"
-      redirect_to home_path
+      if user.active?
+        session[:user_id] = user.id
+        flash[:success] = "Welcome back, #{user.name}"
+        redirect_to home_path
+      else
+        flash[:danger] = "Your acount was locked, please contact customer service."
+        render :new
+      end
     else
       flash[:danger] = "Something wrong about your email or password"
       render :new

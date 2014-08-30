@@ -2,7 +2,7 @@ class UserRegister
   attr_reader :message, :user_id
   def initialize(user_info, card_token, invitation_token)
     @user_info = user_info
-    @card_token = @card_token
+    @card_token = card_token
     @invitation_token = invitation_token
   end
 
@@ -10,13 +10,19 @@ class UserRegister
     begin
       User.transaction do
         @user = User.create!(@user_info)
-        StripeWrapper::Charge.charge(
+        @user.update_attributes(
+          stripe_user_id:
+          StripeWrapper::Charge.charge(
           :email       => @user.email,
           :token       => @card_token,
           :description => "charge of signup #{@user.email}",
           :amount      => 999
+          ),
         )
       end
+      # Billing.create!(
+      #   pay_date: Time.now, active_until: 1.month.from_now,
+      #   user: @user, amount: 9.99)
       if valid_token?
         inviter = @invitation.user
         Followship.create(user_id: inviter.id, followee_id: @user.id)
