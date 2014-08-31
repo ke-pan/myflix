@@ -29,26 +29,26 @@ describe Video do
   describe "#recent_reviews" do
     it "returns an array of reviews ordered by updated time" do
       video = Fabricate(:video)
-      review1 = Fabricate(:review, video: video)
+      Fabricate(:review, video: video)
       review2 = Fabricate(:review, video: video)
       expect(video.recent_reviews(1)).to eq([review2])
     end
   end
 
-  describe "#rate" do
-    it "returns average rate of its reviews" do
-      video = Fabricate(:video)
-      review1 = Fabricate(:review, rate: 1, video: video)
-      review2 = Fabricate(:review, rate: 2, video: video)
-      expect(video.rate).to eq('1.5')
-    end
-  end
+  # describe "#rate" do
+  #   it "returns average rate of its reviews" do
+  #     video = Fabricate(:video)
+  #     review1 = Fabricate(:review, rate: 1, video: video)
+  #     review2 = Fabricate(:review, rate: 2, video: video)
+  #     expect(video.rate).to eq('1.5')
+  #   end
+  # end
 
   describe "#reviews_count" do
     it "returns number of reviews" do
       video = Fabricate(:video)
-      review1 = Fabricate(:review, rate: 1, video: video)
-      review2 = Fabricate(:review, rate: 2, video: video)
+      Fabricate(:review, rate: 1, video: video)
+      Fabricate(:review, rate: 2, video: video)
       expect(video.reviews_count).to eq(2)
     end
   end

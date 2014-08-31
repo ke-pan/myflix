@@ -13,13 +13,12 @@ gem "bcrypt"
 gem 'sidekiq'
 gem 'carrierwave'
 gem 'mini_magick'
-# gem 'fog', '~> 1.3.1'
-# gem 'nokogiri', '~> 1.5.0'
 gem 'fog'
 gem 'nokogiri'
 gem 'stripe'
 gem 'figaro', git: "https://github.com/laserlemon/figaro"
-# gem 'excon', '~> 0.27.5'
+gem 'draper'
+gem 'stripe_event'
 
 
 group :development do
@@ -28,6 +27,7 @@ group :development do
   gem "better_errors"
   gem "binding_of_caller"
   gem 'letter_opener'
+  gem 'ultrahook'
 end
 
 group :development, :test do
