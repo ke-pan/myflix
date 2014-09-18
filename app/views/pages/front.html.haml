@@ -1,3 +1,23 @@
+.alert.alert-success.alert-dismissible#proj-description(role="alert")
+  %button.close(data-dismiss="alert")
+    %span(aria-hidden="true")x
+    %span.sr-only Close
+  %p
+    欢迎来到
+    %a(href="#")我
+    的展示项目。点击
+    %a(href="https://github.com/ke-pan/myflix")这里
+    查看源码。
+    %p 这是一个“伪”视频网站，你可以通过 admin@test.com 123456 登陆为管理员，或者使用卡号为 4242424242424242 的测试信用卡注册。
+    %p 实现了如下功能:
+    %ul
+      %li 注册发邮件
+      %li stripe 收费
+      %li 重置密码
+      %li 邀请好友
+      %li 关注好友
+      %li 添加收藏
+      %li 上传图片
 %section.site_title
   %h1
     Unlimited Movies for Only 9.99 a Month.
