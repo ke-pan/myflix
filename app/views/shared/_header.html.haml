@@ -21,4 +21,6 @@
               =link_to "Account", current_user
               =link_to "Plan and Billing", user_plan_and_billing_path(current_user)
               =link_to "Invite a Friend", invite_path
+              - if current_user.admin?
+                =link_to "New Video", new_admin_video_path
               =link_to "Sign Out", signout_path
