@@ -22,11 +22,11 @@ class PaymentSucceeded
     user = User.find_by(stripe_user_id: event.data.object.customer)
     user.update_attributes!(
       active: true,
-      active_until: Time.at(event.data.object.lines.data.period.end)
+      active_until: Time.at(event.data.object.lines.data[0].period.end)
       )
     Billing.create!(
-      pay_date: Time.at(event.data.object.lines.data.period.start),
-      active_until: Time.at(event.data.object.lines.data.period.end),
+      pay_date: Time.at(event.data.object.lines.data[0].period.start),
+      active_until: Time.at(event.data.object.lines.data[0].period.end),
       user: user,
       amount: 9.99
       )
