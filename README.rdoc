@@ -1,4 +1,3 @@
-link[点击查看](kepan-flix.herokuapp.com)部署在 heroku 上的网页
 
 实现了如下功能:
 - 注册发邮件
